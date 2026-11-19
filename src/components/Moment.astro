@@ -1,0 +1,40 @@
+---
+// Dark "from bean to cup" band: beans drift down, a cup tumbles, the headline lights up word by word as you scroll.
+import type { Content } from '../data/content';
+import Doodle from './art/Doodle.astro';
+interface Props { c: Content }
+const { c } = Astro.props;
+const m = c.fx.moment;
+const beans = Array.from({ length: 16 }, (_, i) => ({
+  x: (i * 37 + 11) % 94, y: (i * 53 + 7) % 90, s: 26 + ((i * 17) % 38), r: (i * 47) % 180, sp: 0.4 + ((i * 13) % 10) / 8,
+}));
+---
+<section class="moment relative isolate overflow-hidden bg-ink py-28 text-milk md:py-44" aria-labelledby="moment-title" data-moment>
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    {beans.map((b) => (
+      <svg class="bean absolute text-cognac/70" style={`left:${b.x}%;top:${b.y}%;width:${b.s}px;rotate:${b.r}deg`} viewBox="0 0 60 80" data-bean={b.sp} data-spin={b.r % 2 ? 1 : -1}>
+        <path d="M30 4C10 8 2 40 14 62c10 16 38 8 44-18C62 24 48 2 30 4Z" fill="currentColor" /><path d="M32 8C22 26 40 44 28 74" fill="none" stroke="#1c1a17" stroke-width="3" stroke-linecap="round" />
+      </svg>
+    ))}
+  </div>
+  <div class="container-x relative grid items-center gap-14 lg:grid-cols-12">
+    <div class="lg:col-span-7">
+      <p class="t-hand text-[1.9rem] text-cognac" data-reveal>{m.eyebrow}</p>
+      <h2 id="moment-title" class="t-display t-h2 mt-4" data-words>
+        {m.title.split(' ').map((w) => <span class="word inline-block" data-word>{w}&nbsp;</span>)}
+      </h2>
+      <p class="t-body mt-8 max-w-md text-milk/75" data-reveal>{m.sub}</p>
+      <a href="#menu" class="btn btn-cognac mt-10" data-open-menu="coffee" data-reveal><span>{m.cta}</span></a>
+    </div>
+    <div class="relative mx-auto grid aspect-square w-[min(78vw,26rem)] place-items-center lg:col-span-5">
+      <div class="absolute inset-[8%] rounded-full bg-espresso" aria-hidden="true"></div>
+      <div class="tumble relative w-[58%] text-milk" data-tumble><Doodle name="cup" class="w-full" draw={false} /></div>
+    </div>
+  </div>
+</section>
+<style>
+  .word { opacity: 0.18; transition: opacity 0.4s; }
+  html:not(.motion-ok) .word { opacity: 1; }
+  .moment { border-radius: 0; }
+  .tumble :global(svg) { stroke: currentColor; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+</style>

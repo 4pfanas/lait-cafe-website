@@ -1,0 +1,62 @@
+---
+import type { Lang } from '../data/site';
+import type { Content } from '../data/content';
+import { findItem, itemText } from '../lib/menuL10n';
+import { num } from '../lib/format';
+import SmartImage from './ui/SmartImage.astro';
+import Doodle from './art/Doodle.astro';
+interface Props { c: Content; lang: Lang }
+const { c, lang } = Astro.props;
+const s = c.signatures;
+const doodles = ['heart', 'softserve', 'cup', 'heart', 'cup', 'softserve'] as const;
+const ticker = lang === 'ar'
+  ? ['قهوة مختصة', 'كرواسون طازج', 'باستا وردية', 'أم علي', 'كيكات بالطلب', 'ضيافة', 'حلِّ لحظاتك']
+  : ['Specialty coffee', 'Fresh croissants', 'Pink pasta', 'Um Ali', 'Cakes to order', 'Catering', 'Sweeten your moments'];
+---
+<div class="marquee border-y-[1.5px] border-ink bg-ink py-4 text-milk" aria-hidden="true">
+  <div class="marquee-track">
+    {[0, 1].map(() => (
+      <div class="flex shrink-0 items-center">
+        {ticker.map((t) => <span class="t-hand flex items-center gap-8 px-8 text-[1.9rem]">{t}<span class="text-cognac">✦</span></span>)}
+      </div>
+    ))}
+  </div>
+</div>
+
+<section class="relative py-24 md:py-36" aria-labelledby="sig-title">
+  <div class="container-x">
+    <div class="grid gap-6 md:grid-cols-12 md:items-end">
+      <div class="md:col-span-8">
+        <p class="t-hand text-[1.9rem] text-cognac" data-reveal>{s.eyebrow}</p>
+        <h2 id="sig-title" class="t-display t-h2 mt-3" data-reveal>{s.title}</h2>
+      </div>
+      <Doodle name="circle" class="hidden w-56 text-cognac md:col-span-4 md:block md:justify-self-end" />
+    </div>
+
+    <ul class="mt-16 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+      {s.items.map((sig, i) => {
+        const it = findItem(sig.id);
+        const tx = itemText(it, lang);
+        return (
+          <li class:list={['sig group', i % 3 === 1 && 'lg:translate-y-14']} data-reveal>
+            <div class="relative aspect-[4/5] overflow-hidden rounded-[26px]" data-tilt="9" data-tag={`${tx.name} · ${c.menu.currency} ${num(it.price, lang)}`}>
+              <div class="sig-img h-full w-full transition-transform duration-[1.2s] group-hover:scale-[1.04]">
+                <SmartImage name={`sig-${sig.id}`} alt={tx.name} sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 90vw" doodle={doodles[i]} tone={i % 2 ? 'crema' : 'paper'} />
+              </div>
+              <span class="t-hand absolute start-5 top-4 -rotate-3 rounded-full bg-milk px-3 py-1 text-[1.35rem] text-cognac">{sig.note}</span>
+              <button type="button" class="tray-btn absolute bottom-4 end-4 grid h-11 w-11 place-items-center rounded-full border-[1.5px] border-ink bg-milk text-ink" aria-pressed="false" data-tray-add={it.id} aria-label={`${c.menu.add}: ${tx.name}`}>
+                <svg class="plus" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0v12M0 6h12" stroke="currentColor" stroke-width="1.6" /></svg>
+              </button>
+            </div>
+            <div class="mt-5 flex items-baseline justify-between gap-4">
+              <h3 class="t-display t-h3">{tx.name}</h3>
+              <span class="t-meta t-num shrink-0">{c.menu.currency} {num(it.price, lang)}</span>
+            </div>
+            <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-soft">{tx.desc}</p>
+            {sig.quote && <p class="mt-3 border-s-2 border-cognac ps-3 text-[0.9rem] italic text-ink">“{sig.quote}” <span class="not-italic text-ink-soft">· {s.from}</span></p>}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>

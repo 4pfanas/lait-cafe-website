@@ -1,0 +1,30 @@
+---
+import { site } from '../data/site';
+import type { Content } from '../data/content';
+import Logo from './art/Logo.astro';
+import Doodle from './art/Doodle.astro';
+interface Props { c: Content }
+const { c } = Astro.props;
+const f = c.footer;
+---
+<footer class="relative overflow-hidden bg-milk pt-16">
+  <div class="container-x">
+    <div class="flex flex-col justify-between gap-8 border-t-[1.5px] border-ink pt-10 md:flex-row md:items-end">
+      <p class="t-hand text-[2.6rem] text-cognac">{f.line}</p>
+      <nav aria-label="Footer"><ul class="flex flex-wrap gap-x-7 gap-y-3">
+        {c.nav.links.map((l) => <li><a href={l.href} class="t-meta hover:underline">{l.label}</a></li>)}
+        <li><a href={site.instagram} target="_blank" rel="noopener" class="t-meta hover:underline">Instagram</a></li>
+        <li><a href={site.tiktok} target="_blank" rel="noopener" class="t-meta hover:underline">TikTok</a></li>
+        <li><a href="#top" class="t-meta hover:underline">{f.top}</a></li>
+      </ul></nav>
+    </div>
+    <div class="relative mt-6 text-center leading-none text-ink" aria-hidden="true" data-footer-mark>
+      <span class="text-[clamp(8rem,36vw,30rem)]"><Logo /></span>
+      <Doodle name="softserve" class="absolute end-[8%] top-[8%] w-[9vw] max-w-28 text-cognac" />
+    </div>
+    <div class="flex flex-col gap-2 border-t border-line py-6 text-[0.8rem] text-ink-soft md:flex-row md:justify-between">
+      <p>{f.rights}</p>
+      {site.isConcept && <p>{f.conceptNote}</p>}
+    </div>
+  </div>
+</footer>

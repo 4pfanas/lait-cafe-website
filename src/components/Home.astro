@@ -1,0 +1,51 @@
+---
+import type { Lang } from '../data/site';
+import { site } from '../data/site';
+import { content } from '../data/content';
+import { clientMenu } from '../lib/menuL10n';
+import Header from './Header.astro';
+import Intro from './Intro.astro';
+import Hero from './Hero.astro';
+import Signatures from './Signatures.astro';
+import MenuExplorer from './MenuExplorer.astro';
+import AskLait from './AskLait.astro';
+import Catering from './Catering.astro';
+import Space from './Space.astro';
+import Beans from './Beans.astro';
+import Visit from './Visit.astro';
+import Moment from './Moment.astro';
+import Clock from './Clock.astro';
+import Receipt from './Receipt.astro';
+import Footer from './Footer.astro';
+import Tray from './Tray.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = content[lang];
+const boot = {
+  lang,
+  items: clientMenu(lang),
+  site: { hours: site.hours, tz: site.tz, cutoff: site.cateringCutoff, whatsapp: site.whatsapp },
+  t: { status: c.status, ask: c.ask, tray: c.tray, menu: { currency: c.menu.currency, add: c.menu.add, remove: c.menu.remove }, catering: c.catering },
+};
+---
+<div id="top"></div>
+<Header c={c} lang={lang} />
+<main id="main">
+  <Intro c={c} />
+  <Hero c={c} />
+  <Signatures c={c} lang={lang} />
+  <MenuExplorer c={c} lang={lang} />
+  <AskLait c={c} />
+  <Catering c={c} />
+  <Space c={c} />
+  <Beans c={c} lang={lang} />
+  <Moment c={c} />
+  <Clock c={c} lang={lang} />
+  <Visit c={c} lang={lang} />
+  <Receipt c={c} lang={lang} />
+</main>
+<Footer c={c} />
+<Tray c={c} />
+<div class="cursor-tag" data-cursor-tag aria-hidden="true"><span data-cursor-tag-text></span></div>
+{site.isConcept && <p class="t-meta pointer-events-none fixed bottom-5 start-5 z-30 hidden rounded-full border-[1.5px] border-ink bg-milk/90 px-3 py-1.5 !text-[0.7rem] md:block">{c.concept}</p>}
+<script type="application/json" id="lait-boot" set:html={JSON.stringify(boot)} />

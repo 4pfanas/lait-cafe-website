@@ -1,0 +1,66 @@
+---
+import { site, type Lang } from '../data/site';
+import type { Content } from '../data/content';
+import { clock } from '../lib/format';
+import Button from './ui/Button.astro';
+import Doodle from './art/Doodle.astro';
+interface Props { c: Content; lang: Lang }
+const { c, lang } = Astro.props;
+const v = c.visit, n = c.newsletter;
+const order = [1, 2, 3, 4, 5, 6, 0];
+const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(n.message)}`;
+---
+<section id="visit" class="relative scroll-mt-16 border-t-[1.5px] border-ink py-24 md:py-32" aria-labelledby="visit-title">
+  <div class="container-x grid gap-14 lg:grid-cols-12">
+    <div class="lg:col-span-6">
+      <p class="t-hand text-[1.9rem] text-cognac" data-reveal>{v.eyebrow}</p>
+      <h2 id="visit-title" class="t-display t-h2 mt-3" data-reveal>{v.title}</h2>
+      <p class="t-body mt-6 text-ink-soft" data-reveal>{v.address}</p>
+      <p class="t-hand mt-2 text-[1.5rem] text-cognac" data-reveal>{v.second}</p>
+      <div class="mt-9 flex flex-wrap gap-3" data-reveal>
+        <Button href={site.mapsUrl} label={v.directions} external />
+        <Button href={`tel:${site.phone}`} label={`${v.call} · ${site.phoneDisplay}`} variant="line" arrow={false} />
+      </div>
+      <p class="t-meta mt-6 text-ink-soft" data-reveal>
+        <a class="underline-offset-4 hover:underline" href={site.talabatUrl} target="_blank" rel="noopener">{v.delivery}</a> ·
+        <a class="underline-offset-4 hover:underline" href={site.instagram} target="_blank" rel="noopener" dir="ltr">{site.instagramHandle}</a>
+      </p>
+    </div>
+    <div class="relative lg:col-span-5 lg:col-start-8" data-reveal>
+      <div class="rounded-[30px] bg-white/70 p-7 shadow-[0_2px_0_var(--color-line)] md:p-9">
+        <div class="flex items-baseline justify-between gap-4">
+          <h3 class="font-bold">{v.hoursTitle}</h3>
+          <p class="t-meta text-cognac-ink" data-status-short></p>
+        </div>
+        <table class="mt-5 w-full text-[0.95rem]">
+          <tbody>
+            {order.map((d) => (
+              <tr class="hours-row border-b border-line" data-day={d}>
+                <th scope="row" class="py-3 text-start font-medium">{v.days[d]} <span class="today t-meta ms-2 hidden rounded-full bg-ink px-2 py-0.5 !text-[0.7rem] text-milk">{v.today}</span></th>
+                <td class="t-num py-3 text-end font-semibold">{clock(site.hours[d].open, lang)} – {clock(site.hours[d].close, lang)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Doodle name="cup" class="float-a absolute -bottom-10 -start-8 w-20 text-ink" />
+    </div>
+  </div>
+
+  <div class="container-x mt-24">
+    <div class="relative overflow-hidden rounded-[34px] bg-ink px-8 py-12 text-milk md:px-14 md:py-16">
+      <Doodle name="heart" class="pointer-events-none absolute -end-6 -top-8 w-48 text-milk/10" draw={false} />
+      <div class="grid items-center gap-8 md:grid-cols-12">
+        <div class="md:col-span-8">
+          <h2 class="t-display t-h2">{n.title}</h2>
+          <p class="t-body mt-3 text-milk/75">{n.sub}</p>
+        </div>
+        <div class="md:col-span-4 md:text-end"><a href={wa} target="_blank" rel="noopener" class="btn btn-cognac">{n.cta}</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .hours-row.is-today th, .hours-row.is-today td { color: var(--color-cognac-ink); }
+  .hours-row.is-today .today { display: inline-block; }
+</style>

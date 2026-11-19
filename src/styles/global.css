@@ -1,0 +1,141 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ─────────── Lait tokens: milk, ink, one cognac accent (three-colour rule) ─────────── */
+@theme {
+  --color-milk: #fbf8f2;      /* base: 60–70% of every screen */
+  --color-paper: #f2ece2;     /* a shade deeper, for quiet panels */
+  --color-crema: #e6dccd;     /* borders on paper, latte-art lines */
+  --color-ink: #1c1a17;       /* the handwritten logo's black */
+  --color-ink-soft: #5e574f;
+  --color-cognac: #b05a26;    /* accent: leather cushions + coffee coaster. ≤10% of the page */
+  --color-cognac-ink: #8f4519;/* cognac for small text on milk (AA) */
+  --color-espresso: #3b2a20;
+  --color-line: rgb(28 26 23 / 0.12);
+
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-sans: "Manrope Variable", system-ui, sans-serif;
+  --font-hand: "Caveat Brush", cursive;
+  --font-ar: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-ar-display: "Noto Naskh Arabic", serif;
+
+  --ease-pour: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html { background: var(--color-milk); color: var(--color-ink); -webkit-font-smoothing: antialiased; scrollbar-color: var(--color-ink) var(--color-milk); }
+  body { background: var(--color-milk); font-family: var(--font-sans); overflow-x: clip; font-feature-settings: "ss01", "cv11"; }
+  html[lang="ar"] body { font-family: var(--font-ar); }
+  ::selection { background: var(--color-ink); color: var(--color-milk); }
+  :focus-visible { outline: 2px solid var(--color-cognac); outline-offset: 3px; border-radius: 6px; }
+  a { color: inherit; text-decoration: none; }
+  input, button, textarea, select { font: inherit; color: inherit; }
+}
+
+@layer components {
+  .container-x { width: 100%; max-width: 82rem; margin-inline: auto; padding-inline: 1.25rem; }
+  @media (min-width: 768px) { .container-x { padding-inline: 2.5rem; } }
+  @media (min-width: 1200px) { .container-x { padding-inline: 4rem; } }
+
+  /* Display: Instrument Serif, set large and close */
+  .t-display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.015em; line-height: 0.96; }
+  html[lang="ar"] .t-display { font-family: var(--font-ar-display); font-weight: 500; letter-spacing: 0; line-height: 1.32; }
+  .t-hero { font-size: clamp(3.2rem, 8.6vw, 8.4rem); }
+  html[lang="ar"] .t-hero { font-size: clamp(2.6rem, 6.6vw, 6.2rem); }
+  .t-h2 { font-size: clamp(2.5rem, 5.6vw, 5.2rem); }
+  html[lang="ar"] .t-h2 { font-size: clamp(2.1rem, 4.4vw, 4rem); }
+  .t-h3 { font-size: clamp(1.7rem, 2.6vw, 2.4rem); }
+
+  /* The brand's own voice: handwriting, used for notes in the margin */
+  .t-hand { font-family: var(--font-hand); font-weight: 400; letter-spacing: 0.01em; line-height: 1; }
+  html[lang="ar"] .t-hand { font-family: var(--font-ar-display); font-weight: 600; font-size: 0.82em; }
+  .t-body { font-size: 1.02rem; line-height: 1.7; }
+  html[lang="ar"] .t-body { font-size: 1.12rem; line-height: 1.95; }
+  .t-meta { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.01em; }
+  html[lang="ar"] .t-meta { font-size: 0.95rem; }
+  .t-num { font-variant-numeric: tabular-nums; }
+
+  /* Buttons: ink pill + outline pill */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+    min-height: 50px; padding-inline: 1.5rem; border-radius: 999px; font-weight: 700; font-size: 0.95rem;
+    white-space: nowrap; transition: background-color 0.35s, color 0.35s, transform 0.5s var(--ease-pour), border-color 0.35s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-ink { background: var(--color-ink); color: var(--color-milk); }
+  .btn-ink:hover { background: var(--color-cognac); }
+  .btn-line { border: 1.5px solid var(--color-ink); }
+  .btn-line:hover { background: var(--color-ink); color: var(--color-milk); }
+  .btn-red, .btn-cognac { background: var(--color-cognac); color: var(--color-milk); }
+  .btn-sm { min-height: 42px; padding-inline: 1.1rem; font-size: 0.85rem; }
+  .btn .arrow { transition: translate 0.4s var(--ease-pour); }
+  .btn:hover .arrow { translate: 3px 0; }
+  [dir="rtl"] .btn .arrow { transform: scaleX(-1); }
+  [dir="rtl"] .btn:hover .arrow { translate: -3px 0; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.4rem; min-height: 40px; padding-inline: 1rem; border-radius: 999px;
+    border: 1.5px solid var(--color-line); font-size: 0.86rem; font-weight: 600; cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .chip:hover { border-color: var(--color-ink); }
+  .chip[aria-pressed="true"], .chip[aria-checked="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-milk); }
+
+  /* Paper tooth: a faint fibre texture over milk */
+  .paper {
+    background-image:
+      radial-gradient(rgb(28 26 23 / 0.028) 1px, transparent 1.3px),
+      radial-gradient(rgb(176 90 38 / 0.02) 1px, transparent 1.3px);
+    background-size: 9px 9px, 15px 15px;
+    background-position: 0 0, 4px 6px;
+  }
+
+  /* Hand-drawn strokes that draw themselves */
+  .doodle path, .doodle circle, .doodle ellipse { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  html.motion-ok .draw path, html.motion-ok .draw circle, html.motion-ok .draw ellipse { stroke-dasharray: var(--len, 600); stroke-dashoffset: var(--len, 600); }
+  html.motion-ok .draw.is-drawn path, html.motion-ok .draw.is-drawn circle, html.motion-ok .draw.is-drawn ellipse { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s var(--ease-pour); }
+
+  /* Header */
+  .site-header { transition: transform 0.6s var(--ease-pour), background-color 0.4s, box-shadow 0.4s; }
+  .site-header.is-scrolled { background: rgb(251 248 242 / 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--color-line); }
+  .site-header.is-hidden, html.intro-active .site-header { transform: translateY(-110%); }
+  .skip-link { position: fixed; inset-inline-start: 1rem; top: 1rem; z-index: 100; padding: 0.7rem 1.1rem; border-radius: 999px; background: var(--color-ink); color: var(--color-milk); transform: translateY(-200%); }
+  .skip-link:focus { transform: none; }
+
+  .marquee { overflow: hidden; }
+  .marquee-track { display: flex; width: max-content; animation: marquee var(--speed, 45s) linear infinite; }
+  [dir="rtl"] .marquee-track { animation-name: marquee-rtl; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes marquee-rtl { to { transform: translateX(50%); } }
+
+  .menu-item[hidden], [data-section][hidden], [data-chapter][hidden] { display: none; }
+  .tray-btn[aria-pressed="true"] { background: var(--color-ink); color: var(--color-milk); border-color: var(--color-ink); }
+  .tray-btn[aria-pressed="true"] .plus { rotate: 45deg; }
+  .tray-btn .plus { transition: rotate 0.35s var(--ease-pour); }
+
+  .float-a { animation: floatA 7s ease-in-out infinite; }
+  @keyframes floatA { 50% { translate: 0 -10px; rotate: -2deg; } }
+}
+
+html.js-motion [data-hero-line] { transform: translateY(105%); }
+html.js-motion [data-hero-fade] { opacity: 0; transform: translateY(16px); }
+html.is-leaving body { opacity: 0; transition: opacity 0.3s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .float-a { animation: none; }
+  .btn, .site-header { transition: none; }
+}
+
+/* ─────────── Brewns-style effects ─────────── */
+.cursor-tag { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; opacity: 0; scale: .7; transition: opacity .25s, scale .35s var(--ease-pour); }
+.cursor-tag.on { opacity: 1; scale: 1; }
+.cursor-tag span { display: block; white-space: nowrap; border-radius: 999px; background: var(--color-ink); color: var(--color-milk); padding: .55rem 1rem; font-size: .82rem; font-weight: 600; box-shadow: 0 14px 30px -16px rgba(28,26,23,.5); }
+@media (hover: none) { .cursor-tag { display: none; } }
+[data-tilt] { transform-style: preserve-3d; will-change: transform; }
+.rot { display: inline-block; font-family: inherit; }
+[data-wm] { font-size: clamp(9rem, 32vw, 30rem); }
+html[lang="ar"] [data-wm] { display: none; }
+.site-header.is-compact [data-header-logo], .site-header.is-compact .lait-logo { transform: scale(.82); transform-origin: left center; }
+[dir="rtl"] .site-header.is-compact .lait-logo { transform-origin: right center; }
+.lait-logo { transition: transform .4s var(--ease-pour); }
+[data-bean] { will-change: transform; }

@@ -1,0 +1,12 @@
+---
+// The Lait wordmark, set in a marker hand to echo their handwritten logo. Swap for their SVG when approved.
+interface Props { class?: string; label?: string }
+const { class: cls = '', label = 'Lait' } = Astro.props;
+---
+<span class:list={['lait-logo t-hand inline-flex items-baseline leading-none', cls]} aria-label={label} role="img" dir="ltr">
+  <span aria-hidden="true">LA</span><span aria-hidden="true" class="lait-i">i</span><span aria-hidden="true">T</span>
+</span>
+<style>
+  .lait-logo { font-family: var(--font-hand); letter-spacing: 0.02em; }
+  .lait-i { font-size: 0.78em; translate: 0 -0.02em; margin-inline: 0.02em; }
+</style>

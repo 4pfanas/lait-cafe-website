@@ -1,0 +1,22 @@
+---
+// Responsive image by filename; until Lait's photography arrives, a paper panel with a doodle stands in.
+import { Picture } from 'astro:assets';
+import { findImage } from '../../lib/images';
+import Doodle from '../art/Doodle.astro';
+
+interface Props { name: string; alt: string; sizes: string; priority?: boolean; class?: string; doodle?: 'softserve' | 'cup' | 'croissant' | 'heart' | 'beans' | 'box'; tone?: 'paper' | 'crema' | 'ink' }
+const { name, alt, sizes, priority = false, class: cls = '', doodle = 'cup', tone = 'paper' } = Astro.props;
+const img = findImage(name);
+const widths = img ? [...new Set([360, 540, 720, 960, 1280, 1600].filter((w) => w < img.width).concat(img.width))] : [];
+const bg = tone === 'ink' ? 'bg-ink text-milk/70' : tone === 'crema' ? 'bg-crema text-ink/45' : 'bg-paper text-ink/40';
+---
+{img ? (
+  <Picture src={img} alt={alt} widths={widths} sizes={sizes} formats={['avif', 'webp']} quality={80}
+    loading={priority ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : 'auto'}
+    class="block h-full w-full object-cover" pictureAttributes={{ class: `block h-full w-full ${cls}` }} />
+) : (
+  <div class:list={['paper relative grid h-full w-full place-items-center overflow-hidden', bg, cls]} role={alt ? 'img' : undefined} aria-label={alt || undefined}>
+    <Doodle name={doodle} draw={false} class="w-[34%] max-w-40" />
+    {import.meta.env.DEV && <span class="t-meta absolute start-4 top-4 opacity-60">{name}</span>}
+  </div>
+)}

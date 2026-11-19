@@ -1,0 +1,46 @@
+---
+import type { Lang } from '../data/site';
+import type { Content } from '../data/content';
+import { findItem, itemText } from '../lib/menuL10n';
+import { num } from '../lib/format';
+import Doodle from './art/Doodle.astro';
+interface Props { c: Content; lang: Lang }
+const { c, lang } = Astro.props;
+const b = c.beans;
+const beans = [
+  { id: 'brazil-250', tone: 'bg-espresso text-milk', flag: 'BR' },
+  { id: 'ethiopia-250', tone: 'bg-cognac text-milk', flag: 'ET' },
+];
+---
+<section class="relative bg-paper py-24 md:py-28" aria-labelledby="beans-title">
+  <div class="container-x grid items-center gap-12 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <p class="t-hand text-[1.9rem] text-cognac" data-reveal>{b.eyebrow}</p>
+      <h2 id="beans-title" class="t-display t-h2 mt-3" data-reveal>{b.title}</h2>
+      <p class="t-body mt-5 text-ink-soft" data-reveal>{b.sub}</p>
+    </div>
+    <ul class="grid gap-5 sm:grid-cols-2 lg:col-span-8">
+      {beans.map((x) => {
+        const it = findItem(x.id); const tx = itemText(it, lang);
+        return (
+          <li class:list={['bag group relative flex min-h-[20rem] flex-col justify-between overflow-hidden rounded-[30px] p-8', x.tone]} data-reveal>
+            <Doodle name="beans" class="absolute -end-6 -top-4 w-40 opacity-25 transition-transform duration-1000 group-hover:rotate-12" draw={false} />
+            <div><span class="t-hand text-[1.4rem] opacity-80">LAiT · {x.flag}</span><h3 class="t-display mt-3 text-[3rem] leading-none">{tx.name}</h3></div>
+            <div>
+              <p class="t-hand text-[1.5rem] leading-tight">{tx.desc}</p>
+              <div class="mt-6 flex items-center justify-between">
+                <span class="t-num font-bold">{c.menu.currency} {num(it.price, lang)} · 250 g</span>
+                <button type="button" class="tray-btn grid h-10 w-10 place-items-center rounded-full border-[1.5px] border-current" aria-pressed="false" data-tray-add={it.id} aria-label={`${c.menu.add}: ${tx.name}`}>
+                  <svg class="plus" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0v12M0 6h12" stroke="currentColor" stroke-width="1.6" /></svg>
+                </button>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+<style>
+  .bag .tray-btn[aria-pressed='true'] { background: var(--color-milk); color: var(--color-ink); border-color: var(--color-milk); }
+</style>

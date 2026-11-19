@@ -1,0 +1,40 @@
+---
+// Hand-drawn marks in the spirit of the doodle on Lait's cups. `draw` makes them draw themselves on scroll.
+interface Props { name: 'softserve' | 'cup' | 'croissant' | 'heart' | 'arrow' | 'circle' | 'sparkle' | 'beans' | 'box' | 'underline' | 'steam'; class?: string; draw?: boolean; label?: string }
+const { name, class: cls = '', draw = true, label } = Astro.props;
+const paths: Record<string, { vb: string; d: string[] }> = {
+  softserve: { vb: '0 0 120 170', d: [
+    'M38 92 L60 160 L82 92',
+    'M34 92 Q60 98 86 92',
+    'M46 106 L74 106 M50 120 L70 120 M54 134 L66 134',
+    'M34 92 C22 88 24 72 38 72 C30 62 40 50 52 54 C50 40 66 32 74 44 C82 40 92 48 86 58 C98 62 98 78 86 82 C92 90 88 94 86 92',
+    'M60 34 C58 26 64 20 66 14',
+  ]},
+  cup: { vb: '0 0 120 140', d: [
+    'M24 40 L34 128 Q36 134 42 134 L78 134 Q84 134 86 128 L96 40 Z',
+    'M20 30 L100 30 L96 40 L24 40 Z',
+    'M30 70 L90 70 M31 98 L89 98',
+    'M48 22 C44 14 54 10 50 2 M64 22 C60 14 70 10 66 2',
+  ]},
+  croissant: { vb: '0 0 160 100', d: [
+    'M14 70 C8 50 28 30 46 34 C56 18 80 14 92 26 C106 18 132 26 136 46 C152 52 154 72 146 80',
+    'M14 70 C40 86 120 90 146 80',
+    'M46 34 C52 50 50 66 44 80 M92 26 C94 46 90 66 84 86 M136 46 C128 60 124 70 118 84',
+  ]},
+  heart: { vb: '0 0 120 110', d: [
+    'M60 100 C24 74 8 54 14 34 C20 14 46 10 60 32 C74 10 100 14 106 34 C112 54 96 74 60 100 Z',
+    'M60 98 L60 40 M60 40 C52 30 44 28 36 32 M60 40 C68 30 76 28 84 32',
+  ]},
+  arrow: { vb: '0 0 140 70', d: ['M6 50 C40 10 90 6 128 28', 'M112 14 L130 28 L110 38'] },
+  circle: { vb: '0 0 220 90', d: ['M200 30 C180 6 60 2 22 26 C-6 44 30 82 112 84 C190 86 214 58 196 34 C186 22 160 14 130 12'] },
+  sparkle: { vb: '0 0 60 60', d: ['M30 4 L30 56 M4 30 L56 30 M12 12 L48 48 M48 12 L12 48'] },
+  beans: { vb: '0 0 120 80', d: ['M30 10 C10 14 6 50 26 64 C46 76 62 44 52 24 C46 12 38 8 30 10 Z', 'M34 14 C26 30 40 44 32 62', 'M84 18 C66 20 62 52 80 64 C100 76 116 46 106 28 C100 18 92 16 84 18 Z', 'M88 20 C80 36 96 48 86 64'] },
+  box: { vb: '0 0 160 140', d: ['M20 50 L140 50 L140 128 L20 128 Z', 'M14 38 L146 38 L146 50 L14 50 Z', 'M80 38 L80 128', 'M80 38 C64 16 44 18 50 32 C54 40 70 40 80 38 C90 40 106 40 110 32 C116 18 96 16 80 38'] },
+  underline: { vb: '0 0 300 24', d: ['M4 16 C60 6 120 20 180 10 C220 4 260 12 296 8'] },
+  steam: { vb: '0 0 60 80', d: ['M18 76 C6 60 30 50 18 34 C8 20 26 12 20 2', 'M40 76 C28 60 52 50 40 34 C30 20 48 12 42 2'] },
+};
+const p = paths[name];
+---
+<svg class:list={['doodle', draw && 'draw', cls]} viewBox={p.vb} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} focusable="false" data-draw={draw ? '' : undefined}>
+  {p.d.map((d) => <path d={d} />)}
+</svg>

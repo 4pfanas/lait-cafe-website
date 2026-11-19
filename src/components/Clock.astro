@@ -1,0 +1,39 @@
+---
+// A big dial that tells real Al Ain time; two drinks orbit it as you scroll. Corners hold the practical info.
+import type { Lang } from '../data/site';
+import { site } from '../data/site';
+import type { Content } from '../data/content';
+import { num } from '../lib/format';
+import SmartImage from './ui/SmartImage.astro';
+interface Props { c: Content; lang: Lang }
+const { c, lang } = Astro.props;
+const k = c.fx.clock;
+const marks = Array.from({ length: 12 }, (_, i) => i);
+---
+<section id="clock" class="clock relative overflow-hidden bg-milk py-24 md:py-36" aria-labelledby="clock-title" data-clock>
+  <div class="container-x">
+    <p class="t-hand text-[1.9rem] text-cognac" data-reveal>{k.eyebrow}</p>
+    <h2 id="clock-title" class="t-display t-h2 mt-3" data-reveal>{k.title}</h2>
+    <div class="relative mx-auto mt-14 aspect-square w-[min(88vw,38rem)]" role="img" aria-label={k.label}>
+      <div class="absolute inset-0 rounded-full border-[1.5px] border-ink bg-paper"></div>
+      {marks.map((i) => (
+        <span class="absolute inset-0" style={`transform:rotate(${i * 30}deg)`} aria-hidden="true"><span class:list={['absolute start-1/2 top-3 block -translate-x-1/2 bg-ink', i % 3 === 0 ? 'h-5 w-[3px]' : 'h-3 w-[2px] opacity-60']}></span></span>
+      ))}
+      <div class="absolute inset-0" data-orbit aria-hidden="true">
+        <div class="absolute start-1/2 top-0 h-[26%] w-[26%] -translate-x-1/2 -translate-y-1/2" data-planet><div class="h-full w-full overflow-hidden rounded-full border-[5px] border-milk shadow-[0_18px_30px_-18px_rgba(28,26,23,.5)]"><SmartImage name="sig-ocean-latte" alt="" sizes="160px" doodle="cup" /></div></div>
+        <div class="absolute bottom-0 start-1/2 h-[22%] w-[22%] -translate-x-1/2 translate-y-1/2" data-planet><div class="h-full w-full overflow-hidden rounded-full border-[5px] border-milk shadow-[0_18px_30px_-18px_rgba(28,26,23,.5)]"><SmartImage name="sig-velvet-cloud" alt="" sizes="140px" doodle="cup" /></div></div>
+      </div>
+      <span class="absolute start-1/2 top-1/2 h-[26%] w-[5px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-ink" data-hand="h"></span>
+      <span class="absolute start-1/2 top-1/2 h-[38%] w-[3px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-ink" data-hand="m"></span>
+      <span class="absolute start-1/2 top-1/2 h-[40%] w-[2px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-cognac" data-hand="s"></span>
+      <span class="absolute start-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink"></span>
+      <p class="t-num absolute inset-x-0 top-[62%] text-center text-[1.4rem] font-semibold" dir="ltr" data-digital></p>
+    </div>
+    <dl class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div><dt class="t-meta text-ink-soft">{k.eyebrow}</dt><dd class="t-display t-h3 mt-1">{k.address}</dd></div>
+      <div><dt class="t-meta text-ink-soft">{k.hoursLabel}</dt><dd class="t-display t-h3 mt-1" data-today-hours data-closed={k.closed}>&nbsp;</dd></div>
+      <div><dt class="t-meta text-ink-soft">{k.callLabel}</dt><dd class="t-display t-h3 mt-1" dir="ltr"><a href={`tel:${site.phone}`} class="hover:underline">{site.phoneDisplay}</a></dd></div>
+      <div><dt class="t-meta text-ink-soft">{k.ratingLabel}</dt><dd class="t-display t-h3 mt-1">{num(site.rating.value, lang)} / {num(5, lang)}</dd></div>
+    </dl>
+  </div>
+</section>
